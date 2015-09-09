@@ -36,9 +36,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.marker = nil
         }
 
-        let text = addressField.text
-
-        if text.isEmpty {
+        guard let text = addressField.text where !text.isEmpty else {
             result.text = "Address is empty!"
             return
         }
@@ -55,17 +53,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
         )
 
         geocoder.geocodeAddressString(text, inRegion: region) { placemarks, error in
-            if let places = placemarks as? [CLPlacemark] {
-                for place in placemarks {
+            if let places = placemarks {
+                for place in places {
                     NSLog("\(place)")
                 }
 
-                if let first = places.first {
+                let placesWithLocations = places.filter { p in p.location != nil }
+
+                if let first = placesWithLocations.first {
                     self.result.text = "Found \(places.count) place(s), I think you're here: \(first.name)"
                     self.map.hidden = false
 
                     let marker = MKPointAnnotation()
-                    marker.coordinate = first.location.coordinate
+                    marker.coordinate = first.location!.coordinate
                     self.marker = marker
 
                     self.map.addAnnotation(marker)
