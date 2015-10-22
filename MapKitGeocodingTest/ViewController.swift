@@ -54,8 +54,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         geocoder.geocodeAddressString(text, inRegion: region) { placemarks, error in
             if let places = placemarks {
-                for place in places {
-                    NSLog("\(place)")
+                for (i, place) in places.enumerate() {
+                    NSLog("\(i + 1))\n" +
+                        "- name: \(place.name)\n" +
+                        "- location: \(place.location)\n" +
+                        "- country: \(place.ISOcountryCode) (\(place.country))\n" +
+                        "- area: \(place.administrativeArea), \(place.subAdministrativeArea)\n" +
+                        "- region: \(place.region)\n" +
+                        "- thoroughfare: \(place.thoroughfare), \(place.subThoroughfare)\n" +
+                        "- locality: \(place.locality), \(place.subLocality)\n" +
+                        "- address: \(place.addressDictionary)\n" +
+                        "- postal code: \(place.postalCode)\n" +
+                        "- water area: \(place.inlandWater) / \(place.ocean)\n" +
+                        "- areas of interest: \(place.areasOfInterest)\n"
+                    )
                 }
 
                 let placesWithLocations = places.filter { p in p.location != nil }
